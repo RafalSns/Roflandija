@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FindMovie</title>
+    <link rel="stylesheet" href="/static/styles/findStyles.css">
+    
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Include Selectize.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.default.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js"></script>
+    <script src="/static/scripts/main.js"></script>
+        
+
+
+</head>
+<body>
+    <div class="main_text">
+        <p>Sužinok, ką verta žiūrėti!</p>
+    </div>
+    
+
+
+    <div class="searchform">
+
+            <form method="POST">
+                    <select name="movie"   class="movie-select" id = "selecter"  >
+                        <option value="" disabled selected hidden>Įrašyk filmo pavadinimą...</option>
+                        {% for movie in movies_list %}
+                            
+                            <option value="{{ movie }}" {% if movie == selected_movie %}selected{% endif %}>
+                                {{ movie }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+               <button type="submit" id="btn">Rodyti Rekomendacijas</button>
+            </form>
+    </div>
+    <div class="selected-container">
+        
+        {% if selected_movie and selected_poster and selected_genres and selected_avarage and selected_origina_language and selected_overwiev and selected_date and selected_vote_count and selected_trailer %}
+            <div class="movie" data-avarage="{{ selected_avarage }}" data-lang="{{ selected_origina_language }}" data-overwiev="{{ selected_overwiev }}" data-date="{{ selected_date }}" data-genres="{{ selected_genres }}" data-votes="{{ selected_vote_count }}" data-trailer="{{ selected_trailer }}">
+            
+                
+                    
+                    <p>{{ selected_movie }}</p>
+                    <img src="{{ selected_poster }}" alt="{{ selected_movie }}">
+                    
+                
+            </div>
+        {% endif %}
+    </div>
+    {% if recommended_movies %}
+        <h2 id = "h2Rc">Rekomenduojami Filmai:</h2>
+        
+
+        <div class="movie-container" >
+            
+            
+            
+                <!-- <div class="h2-container"><h2>Recommended Movies:</h2></div> -->
+                
+                {% for movie, poster, avarage, lang, overwievs, genres, dates, counts, trailers in zip(recommended_movies, recommended_posters, recommend_vote_avarages, recommend_original_languages, recommend_overviews, recommend_genres, recommend_dates, recommend_vote_counts, recommend_trailers) %}
+                <div class="movie"  data-avarage="{{ avarage }}" data-lang="{{ lang }}" data-overwiev="{{ overwievs }}" data-date="{{ dates }}" data-genres="{{ genres }}" data-votes="{{ counts }}" data-trailer="{{ trailers }}">
+                    
+                    <p>{{ movie }}</p>
+                    <img class="test" src="{{ poster }}" alt="{{ movie }}" >
+                </div>
+                {% endfor %}
+        
+        </div>
+    {% endif %}
+    <div class="modal" id="my_modal">
+        <div class="modal_box">
+            <button class="my-modal-close-btn" id = "close-my-modal-btn">
+                <?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+                <svg width="45px" height="50px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M5.29289 5.29289C5.68342 4.90237 6.31658 4.90237 6.70711 5.29289L12 10.5858L17.2929 5.29289C17.6834 4.90237 18.3166 4.90237 18.7071 5.29289C19.0976 5.68342 19.0976 6.31658 18.7071 6.70711L13.4142 12L18.7071 17.2929C19.0976 17.6834 19.0976 18.3166 18.7071 18.7071C18.3166 19.0976 17.6834 19.0976 17.2929 18.7071L12 13.4142L6.70711 18.7071C6.31658 19.0976 5.68342 19.0976 5.29289 18.7071C4.90237 18.3166 4.90237 17.6834 5.29289 17.2929L10.5858 12L5.29289 6.70711C4.90237 6.31658 4.90237 5.68342 5.29289 5.29289Z" fill="#0F1729"/>
+                </svg>
+            </button>
+            <div class="movie-info-box">
+
+                <div class = "modal-movie-name">
+                    <span>
+                        <span id="modal-movie-title" ></span>
+                        <span id = "modal-movie-data"></span>
+                    </span>
+                    
+                </div>
+                <div class="movie-lang">
+                    <span id="movie-lang"></span>
+                </div>
+
+                <div class="movie-overwiev">
+                    <p id="modal-movie-overwiev"></p>
+                </div>
+                
+                <div class="genre">
+                    <div id="genre-container"></div>
+                </div>
+
+                <div id="traile-container"></div>
+            </div>
+                
+
+                
+                <div class="movie-in-modal" id="modal-movie-poster"></div>
+                
+                <div class="star">
+                    <span class="star-container">
+                        <div class="stardiv">
+                            <div >
+                                <img src="/static/img/star_filled.svg" alt="star">
+                            </div>
+                            <div class="columnstar">
+
+                            
+                                <div>
+                                    <span id = "raiting"></span>
+                                    <span id = "ddd"> /10</span>
+                                </div>
+                                <div id = "votes"></div>
+                            </div>
+                        </div>
+                    </span>
+                    
+                    
+                </div>
+                
+            
+        </div>
+    </div>
+         
+
+  
+ 
+</body>
+</html>
