@@ -1,0 +1,290 @@
+@import url('https://fonts.googleapis.com/css2?family=Monoton&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+body{
+    background: url(../img/2.png);
+    background-color: #1F5272;
+    height: 100vh;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    font-family: Arial, sans-serif;
+    text-align: center;
+   
+}
+
+.main_text{
+    
+   
+   font-family: "Monoton", serif;
+   font-weight: 400;
+   font-style: normal;
+   font-size: 60px;
+   color: white;
+   margin-left: auto;
+   margin-right: auto;
+
+  
+}
+
+
+.movie-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+
+}
+
+.movie {
+    margin: 10px;
+    text-align: center;
+   
+    
+}
+.movie :onclick{
+    cursor: pointer;
+}
+img {
+    width: 200px;
+    height: auto;
+    border-radius: 10px;
+}
+.searchform {
+    width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+#selecter:invalid{
+    color: gray;
+    
+}
+.modal{
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 99998;
+    background-color: rgba(0, 0, 0, .6);
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity .4s, visibility .4s;
+    
+
+}
+
+.modal_box{
+    position: relative;
+    /* max-width: 500px; */
+    height: 600px;
+    width: 900px;
+    padding: 45px;
+    z-index: 1;
+    margin: 30px 15px;
+    background-color: white;
+    box-shadow: 0px 0px 17px -7px rgba(34, 60, 80, 0.2);
+    transform: scale(0);
+    transition: transform .8s;
+}
+.my-modal-close-btn{
+    border: none;
+    background-color: transparent;
+    padding: 5px;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    cursor: pointer;
+}
+
+.my-modal-close-btn svg path{
+    transition: fill .4s;
+}
+
+.my-modal-close-btn:hover svg path{
+    fill: rgb(155, 13, 13);
+    cursor: pointer;
+}
+
+.my-modal-close-btn:active svg path{
+    fill: rgb(90, 151, 5);
+    
+}
+
+.modal.open{
+    visibility: visible;
+    opacity: 1;
+}
+
+.modal.open .modal_box{
+    transform: scale(1);
+}
+
+
+.movie-in-modal img {
+    position: absolute;
+    left: 0px;
+    padding: 40px;
+    width: 250px;
+}
+.movie-in-modal p{
+    display: none;
+}
+.star{
+    display: inline-block;
+    position: absolute;
+    right: 60px;
+    padding: 20px;
+}
+
+.star img{
+    
+    width: 40px;
+    height: 40px;
+}
+
+.star-container{
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    
+}
+.stardiv{
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+}
+.columstar{
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+#btn{
+    width: 250px;
+    height: 50px;
+    border-radius: 600px;
+    text-align: center;
+    font-family: "Montserrat", serif;
+    font-optical-sizing: auto;
+    font-weight: 800;
+    font-size: 15px;
+    color: #6042CE;
+    cursor: pointer;
+    border: none;
+    margin: 10px;
+
+    
+}
+
+    
+
+
+
+
+
+#modal-movie-overwiev
+{
+    text-align: left;
+    max-width: 500px;
+}
+
+#genre-container {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 100%;
+    gap: 10px;
+    
+  }
+
+.genre-button {
+    border: 2px solid red;
+    border-radius: 20px;
+    padding: 5px 15px;
+    background-color: transparent;
+    color: red;
+    font-family: Arial, sans-serif;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+  
+.genre-button:hover {
+    background-color: red;
+    color: white;
+}
+.movie-info-box
+{
+    position: absolute;
+    left: 350px;
+    top: 90px;
+    display: flex;
+    flex-direction: column; 
+    align-items: flex-start; 
+    gap: 10px; 
+}
+
+#modal-movie-title{
+    font-family: "Montserrat", serif;
+    font-optical-sizing: auto;
+    font-weight: 800;
+    font-size: 20px;}
+#modal-movie-data{
+    font-family: "Montserrat", serif;
+    font-optical-sizing: auto;
+    font-weight: 800;
+    font-size: 20px;
+}
+#modal-movie-overwiev{
+    font-family: "Montserrat", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-size: 15px;
+}
+
+#movie-lang
+{
+    font-family: "Montserrat", serif;
+    font-optical-sizing: auto;
+    font-weight: 800;
+    font-size: 15px
+}
+#raiting{
+    font-family: "Montserrat", serif;
+    font-optical-sizing: auto;
+    font-weight: 800;
+    font-size: 15px
+}
+
+#votes{
+    font-family: "Montserrat", serif;
+    font-optical-sizing: auto;
+    font-weight: 800;
+    font-size: 15px
+}
+#ddd{
+    font-family: "Montserrat", serif;
+    font-optical-sizing: auto;
+    font-weight: 800;
+    font-size: 15px
+
+}
+#h2Rc{
+    color:white;
+    font-family: "Montserrat", serif;
+    font-optical-sizing: auto;
+    font-weight: 1000;
+    font-size: 20px
+}
+.movie p {
+    color:white;
+    font-family: "Montserrat", serif;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-size: 15px
+    
+    
+    
+}
