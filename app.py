@@ -31,14 +31,25 @@ def fetch_trailer(movie_id):
 
 # Duomenų įkelimas
 movies = pickle.load(open("movies_list.pkl", 'rb'))
-similarity = pickle.load(open("similarity.pkl", 'rb'))
 movies_info = pickle.load(open("movies_info.pkl", 'rb'))
 movies_list = movies['title'].values
 
-# Rekomedacijos funkcija
+# Ленивая загрузка similarity.pkl
+similarity = None
+
+def load_similarity():
+    global similarity
+    if similarity is None:
+        similarity = pickle.load(open("similarity.pkl", 'rb'))
+    return similarity
+
+# Рекомендации
 def recommend(movie):
+    # Загружаем similarity при необходимости
+    similarity_matrix = load_similarity()
+    
     index = movies[movies['title'] == movie].index[0]
-    distances = sorted(list(enumerate(similarity[index])), key=lambda x: x[1], reverse=True)[1:6]
+    distances = sorted(list(enumerate(similarity_matrix[index])), key=lambda x: x[1], reverse=True)[1:6]
 
     recommended_data = {
         "titles": [],
@@ -69,7 +80,6 @@ def recommend(movie):
 
     return recommended_data
 
-# kelias
 @app.route('/')
 def index():
     return render_template("index.html")
