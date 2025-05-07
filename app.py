@@ -2,37 +2,10 @@ from flask import Flask, render_template, request
 import pickle
 import requests
 import pandas as pd
-import gdown
-import os
 
 app = Flask(__name__)
 
-# Google Drive ссылки
-GDRIVE_URL_SM = 'https://drive.google.com/uc?export=download&id=1oHFpzZcORiB9PAlqbD-PFkLtJ1sEoRuE'
-GDRIVE_URL_MvI = 'https://drive.google.com/uc?export=download&id=1PO7bBEd_A9AhGcT_aoy6szlay94StQgZ'
-GDRIVE_URL_MvL = 'https://drive.google.com/uc?export=download&id=1c7zMh-nx5MjhJZ4Ee2TZeyr_Ym1NVFzX'
-
-# Загрузка pickle с Google Drive (лениво)
-def load_pickle_from_drive(url):
-    response = requests.get(url)
-    response.raise_for_status()
-    return pickle.loads(response.content)
-
-def get_movies():
-    return load_pickle_from_drive(GDRIVE_URL_MvL)
-
-def get_movies_info():
-    return load_pickle_from_drive(GDRIVE_URL_MvI)
-
-def get_similarity():
-    # Кэшируем локально один раз, чтобы не грузить огромный файл при каждом запросе
-    output_path = "similarity_cached.pkl"
-    if not os.path.exists(output_path):
-        gdown.download(GDRIVE_URL_SM, output_path, quiet=False)
-    with open(output_path, "rb") as f:
-        return pickle.load(f)
-
-# Получить постер по TMDb ID
+# Api Funkcijos
 def fetch_poster(movie_id):
     api_key = "c7ec19ffdd3279641fb606d19ceb9bb1"
     url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key={api_key}&language=en-US"
@@ -42,7 +15,6 @@ def fetch_poster(movie_id):
     data = response.json()
     return f"https://image.tmdb.org/t/p/w500/{data.get('poster_path', '')}"
 
-# Получить трейлер
 def fetch_trailer(movie_id):
     api_key = "c7ec19ffdd3279641fb606d19ceb9bb1"
     url = f"https://api.themoviedb.org/3/movie/{movie_id}/videos?language=en-US&api_key={api_key}"
@@ -54,14 +26,17 @@ def fetch_trailer(movie_id):
     for video in data.get("results", []):
         if video.get("type") == "Trailer" and video.get("site") == "YouTube":
             return f"https://www.youtube.com/watch?v={video['key']}"
+
     return "treileris nerastas"
 
-# Рекомендации
-def recommend(movie):
-    movies = get_movies()
-    movies_info = get_movies_info()
-    similarity = get_similarity()
+# Duomenų įkelimas
+movies = pickle.load(open("movies_list.pkl", 'rb'))
+similarity = pickle.load(open("similarity.pkl", 'rb'))
+movies_info = pickle.load(open("movies_info.pkl", 'rb'))
+movies_list = movies['title'].values
 
+# Rekomedacijos funkcija
+def recommend(movie):
     index = movies[movies['title'] == movie].index[0]
     distances = sorted(list(enumerate(similarity[index])), key=lambda x: x[1], reverse=True)[1:6]
 
@@ -94,14 +69,11 @@ def recommend(movie):
 
     return recommended_data
 
-# Главная
+# kelias
 @app.route('/')
 def index():
-    movies = get_movies()
-    movies_list = movies['title'].values
-    return render_template("index.html", movies_list=movies_list)
+    return render_template("index.html")
 
-# Обработка выбора
 @app.route('/find', methods=["GET", "POST"])
 def find():
     selected_data = {
@@ -127,10 +99,6 @@ def find():
         "vote_counts": [],
         "trailers": []
     }
-
-    movies = get_movies()
-    movies_info = get_movies_info()
-    movies_list = movies['title'].values
 
     if request.method == "POST":
         selected_movie = request.form.get("movie")
