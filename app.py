@@ -2,8 +2,40 @@ from flask import Flask, render_template, request
 import pickle
 import requests
 import pandas as pd
+import gdown
+import os
 
 app = Flask(__name__)
+
+GDRIVE_URL_SM = 'https://drive.google.com/uc?export=download&id=1oHFpzZcORiB9PAlqbD-PFkLtJ1sEoRuE'
+GDRIVE_URL_MvI = 'https://drive.google.com/uc?export=download&id=1PO7bBEd_A9AhGcT_aoy6szlay94StQgZ'
+GDRIVE_URL_MvL = 'https://drive.google.com/uc?export=download&id=1c7zMh-nx5MjhJZ4Ee2TZeyr_Ym1NVFzX'
+
+
+def download_and_load_pickle(url, output_path):
+    if not os.path.exists(output_path):
+        print("Скачиваю большой .pkl файл через gdown...")
+        gdown.download(url, output_path, quiet=False)
+        print("Загрузка завершена!")
+
+    with open(output_path, "rb") as f:
+        return pickle.load(f)
+
+# Прямая ссылка (из обычной)
+gdrive_url = "https://drive.google.com/uc?id=1oHFpzZcORiB9PAlqbD-PFkLtJ1sEoRuE"
+similarity = download_and_load_pickle(gdrive_url, "similarity.pkl")
+
+def load_movies(GDRIVE_URL):
+    print("Загружаю файл с Google Drive...")
+    response = requests.get(GDRIVE_URL)
+    response.raise_for_status()  # Выбросит ошибку, если не удалось скачать
+
+    movies = pickle.loads(response.content)
+    print("Файл загружен и распакован!")
+    return movies
+
+
+
 
 # Api Funkcijos
 def fetch_poster(movie_id):
@@ -30,9 +62,11 @@ def fetch_trailer(movie_id):
     return "treileris nerastas"
 
 # Duomenų įkelimas
-movies = pickle.load(open("movies_list.pkl", 'rb'))
-similarity = pickle.load(open("similarity.pkl", 'rb'))
-movies_info = pickle.load(open("movies_info.pkl", 'rb'))
+#movies = pickle.load(open("movies_list.pkl", 'rb'))
+#similarity = pickle.load(open("similarity.pkl", 'rb'))
+#movies_info = pickle.load(open("movies_info.pkl", 'rb'))
+movies = load_movies(GDRIVE_URL_MvL)
+movies_info = load_movies(GDRIVE_URL_MvI)
 movies_list = movies['title'].values
 
 # Rekomedacijos funkcija
