@@ -2,10 +2,20 @@ from flask import Flask, render_template, request
 import pickle
 import requests
 import pandas as pd
+import gdown
+import os
 
 
 app = Flask(__name__)
+GDRIVE_URL_SM = 'https://drive.google.com/uc?export=download&id=1oHFpzZcORiB9PAlqbD-PFkLtJ1sEoRuE'
 
+def get_similarity():
+    # Кэшируем локально один раз, чтобы не грузить огромный файл при каждом запросе
+    output_path = "similarity_cached.pkl"
+    if not os.path.exists(output_path):
+        gdown.download(GDRIVE_URL_SM, output_path, quiet=False)
+    with open(output_path, "rb") as f:
+        return pickle.load(f)
 # Api Funkcijos
 def fetch_poster(movie_id):
     api_key = "c7ec19ffdd3279641fb606d19ceb9bb1"
@@ -34,20 +44,21 @@ def fetch_trailer(movie_id):
 movies = pickle.load(open("movies_list.pkl", 'rb'))
 movies_info = pickle.load(open("movies_info.pkl", 'rb'))
 movies_list = movies['title'].values
+similarity_matrix =  get_similarity()
+
 
 # Ленивая загрузка similarity.pkl
 similarity = None
 
-def load_similarity():
-    global similarity
-    if similarity is None:
-        similarity = pickle.load(open("similarity.pkl", 'rb'))
-    return similarity
-
+#def load_similarity():
+    #global similarity
+    #if similarity is None:
+        #similarity = pickle.load(open("similarity.pkl", 'rb'))
+    #return similarity
 # Рекомендации
 def recommend(movie):
     # Загружаем similarity при необходимости
-    similarity_matrix =  load_similarity()
+    #similarity_matrix =  get_similarity()
     
     index = movies[movies['title'] == movie].index[0]
     distances = sorted(list(enumerate(similarity_matrix[index])), key=lambda x: x[1], reverse=True)[1:6]
