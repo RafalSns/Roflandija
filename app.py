@@ -2,7 +2,7 @@ from flask import Flask, render_template, request
 import pickle
 import requests
 import pandas as pd
-import joblib
+
 
 app = Flask(__name__)
 
@@ -47,7 +47,7 @@ def load_similarity():
 # Рекомендации
 def recommend(movie):
     # Загружаем similarity при необходимости
-    similarity_matrix =  joblib.load("similarity.pkl")
+    similarity_matrix =  load_similarity()
     
     index = movies[movies['title'] == movie].index[0]
     distances = sorted(list(enumerate(similarity_matrix[index])), key=lambda x: x[1], reverse=True)[1:6]
